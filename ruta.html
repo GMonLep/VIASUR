@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Sincronización de Rutas - ViaSur</title>
+    <link href="css/styles.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;800&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <style>
+        body { font-family: 'Manrope', sans-serif; min-height: 100dvh; opacity: 0; transition: opacity 0.5s ease-in-out; }
+        body.loaded { opacity: 1; }
+        .modal-active { overflow: hidden; }
+        h1, h2, h3, .font-headline { font-family: 'Space Grotesk', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .fill-icon { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        @keyframes blink-gentle {
+            0%, 100% { background-color: #F0FDF4; border-color: #22C55E; }
+            50% { background-color: #DCFCE7; border-color: #16A34A; }
+        }
+        .animate-blink-gentle { animation: blink-gentle 3s ease-in-out infinite; }
+        .animate-fade-up { animation: fade-up 0.75s ease-out both; }
+        .animate-pop { animation: pop-in 0.65s ease-out both; }
+        .animate-nav-item { animation: fade-in-nav 0.65s ease-out both; }
+        @keyframes fade-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0);} }
+        @keyframes pop-in { from { opacity: 0; transform: translateY(10px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes fade-in-nav { from { opacity: 0; transform: translateY(10px);} to { opacity: 1; transform: translateY(0);} }
+    </style>
+</head>
+<body class="bg-surface text-on-surface antialiased pt-16 md:pl-[320px] pb-24 md:pb-8">
+
+<!-- Global Notification Toast -->
+<div id="global-notification" class="fixed top-4 left-1/2 -translate-x-1/2 z-[100] transform -translate-y-20 opacity-0 transition-all duration-500 ease-out pointer-events-none">
+    <div class="bg-primary text-on-primary px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-4 border border-outline-variant/20 backdrop-blur-md">
+        <div class="bg-secondary-container text-on-secondary-container p-2 rounded-xl">
+            <span class="material-symbols-outlined fill-icon text-sm">local_shipping</span>
+        </div>
+        <div class="flex flex-col">
+            <span class="text-[10px] font-bold uppercase tracking-widest opacity-70">Nueva Carga en Ruta</span>
+            <span id="notification-text" class="text-sm font-bold">Carga detectada cerca de tu ubicación</span>
+        </div>
+    </div>
+</div>
+
+<!-- Header -->
+<header class="fixed top-0 w-full z-40 flex justify-between items-center px-6 py-4 bg-surface-bright/80 backdrop-blur-md shadow-sm md:ml-[320px] md:w-[calc(100%-320px)] border-b border-outline-variant/30 animate-pop">
+    <div class="flex items-center gap-3">
+        <button class="p-2 rounded-full md:hidden hover:bg-surface-container-high transition-colors">
+            <span class="material-symbols-outlined">menu</span>
+        </button>
+        <a href="home.html" class="font-headline text-2xl font-bold tracking-tighter text-primary transition-all">ViaSur</a>
+    </div>
+    <div class="flex items-center gap-2">
+        <button class="w-9 h-9 rounded-full overflow-hidden border-2 border-primary-container">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCydoP5M6JeXyEPBKsC2ZWfY1ox_OSNv2ctJf4OjDHFz5IBWqrSP5msiBKykcQJcFVOSAON7Gc6jV93sb8ebjPik07y0aQ8VUmtA1-tu1vLoaGcFpwPx9NKwJLa8dkRrwwZP3W3pLUA7vtvKTBPNlQbPEAWOyfn3MLqH9Ctslj12WFGQjAMfsdYRPPtpexdU3xnpytwr7RFm9jU46I_YOlWxbriD1b58DxQoYCkXg_qiynJvTa5-cU0IfFp62IbrlyPOwsn1FGIr0" alt="Avatar">
+        </button>
+    </div>
+</header>
+<nav class="mt-2 w-full bg-surface-bright dark:bg-[#163428] border-b border-outline-variant/30 px-6 py-3 flex flex-wrap justify-center gap-3 animate-fade-up">
+    <a href="home.html" class="flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-primary hover:text-secondary"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>Inicio</a>
+    <a href="carga.html" class="flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-primary hover:text-secondary"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">inventory_2</span>Carga</a>
+    <a href="ruta.html" class="flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-white bg-primary px-4 py-2 rounded-full"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">explore</span>Ruta</a>
+    <a href="retorno.html" class="flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-primary hover:text-secondary"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">swap_horiz</span>Retorno</a>
+    <a href="nav.html" class="flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-primary hover:text-secondary"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">navigation</span>Navegación</a>
+</nav>
+
+<!-- Sidebar Desktop -->
+<aside class="hidden md:flex fixed inset-y-0 left-0 z-50 flex-col w-[320px] bg-surface-container-low border-r border-outline-variant/30 p-6 animate-fade-up">
+    <div class="flex items-center gap-4 mb-8">
+        <div class="w-12 h-12 bg-primary-container text-on-primary-container rounded-2xl flex items-center justify-center shadow-inner">
+            <span class="material-symbols-outlined">local_shipping</span>
+        </div>
+        <div>
+            <h3 class="font-headline font-bold text-lg text-on-surface leading-tight text-primary">ViaSur</h3>
+            <p class="text-xs text-on-surface-variant font-medium">v1.1 Industrial</p>
+        </div>
+    </div>
+    <nav class="space-y-2">
+        <a href="home.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all">
+            <span class="material-symbols-outlined">home</span> Inicio
+        </a>
+        <a href="carga.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all">
+            <span class="material-symbols-outlined">inventory_2</span> Carga
+        </a>
+        <a href="retorno.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all">
+            <span class="material-symbols-outlined">swap_horiz</span> Retorno
+        </a>
+        <a href="ruta.html" class="flex items-center gap-3 px-4 py-3 bg-primary text-white rounded-xl font-bold shadow-md">
+            <span class="material-symbols-outlined fill-icon">explore</span> Ruta
+        </a>
+        <a href="nav.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all">
+            <span class="material-symbols-outlined">navigation</span> Navegación
+        </a>
+    </nav>
+</aside>
+
+<!-- Bottom Nav Mobile -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-[#f8faf5]/80 dark:bg-[#191c1a]/90 backdrop-blur-xl z-50 rounded-t-lg shadow-[0_-10px_30px_rgba(25,28,26,0.04)] border-t border-[#c1c8c3]/15 md:hidden animate-fade-up">
+    <a href="home.html" class="flex flex-col items-center justify-center text-[#424844] dark:text-[#c1c8c3] px-5 py-2 hover:text-[#163428] dark:hover:text-[#ffffff] transition-all duration-300 ease-in-out">
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+        <span class="font-label text-[10px] font-bold uppercase tracking-wider mt-1">Inicio</span>
+    </a>
+    <a href="carga.html" class="flex flex-col items-center justify-center text-[#424844] dark:text-[#c1c8c3] px-5 py-2 hover:text-[#163428] dark:hover:text-[#ffffff] transition-all duration-300 ease-in-out">
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+        <span class="font-label text-[10px] font-bold uppercase tracking-wider mt-1">Carga</span>
+    </a>
+    <a href="ruta.html" class="flex flex-col items-center justify-center bg-primary text-white rounded-xl px-5 py-2 transition-all duration-300 ease-in-out">
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">explore</span>
+        <span class="font-label text-[10px] font-bold uppercase tracking-wider mt-1">Ruta</span>
+    </a>
+    <a href="retorno.html" class="flex flex-col items-center justify-center text-[#424844] dark:text-[#c1c8c3] px-5 py-2 hover:text-[#163428] dark:hover:text-[#ffffff] transition-all duration-300 ease-in-out">
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">swap_horiz</span>
+        <span class="font-label text-[10px] font-bold uppercase tracking-wider mt-1">Retorno</span>
+    </a>
+    <a href="nav.html" class="flex flex-col items-center justify-center text-[#424844] dark:text-[#c1c8c3] px-5 py-2 hover:text-[#163428] dark:hover:text-[#ffffff] transition-all duration-300 ease-in-out">
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">navigation</span>
+        <span class="font-label text-[10px] font-bold uppercase tracking-wider mt-1">Navegación</span>
+    </a>
+</nav>
+
+<!-- Contenido Principal -->
+<main class="container mx-auto px-4 max-w-5xl pt-8 animate-fade-up">
+    <header class="mb-8">
+        <h1 class="text-3xl md:text-4xl font-headline font-extrabold tracking-tight mb-3">Estado de Conexión</h1>
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-surface-container-high text-on-surface-variant text-sm font-bold border border-outline-variant/20">
+            <span class="material-symbols-outlined text-sm">wifi_off</span>
+            Zona de Palena (Modo Offline)
+        </div>
+    </header>
+
+    <section class="grid grid-cols-1 md:grid-cols-12 gap-6">
+        <!-- Tarjeta Principal de Sincronización -->
+        <div class="md:col-span-8 bg-surface-container-low rounded-[2rem] p-1 border border-outline-variant/30 shadow-sm">
+            <div class="bg-surface-container-lowest rounded-[1.8rem] p-8 md:p-12 flex flex-col items-center text-center relative overflow-hidden group">
+                <div class="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent opacity-50"></div>
+                
+                <div class="w-24 h-24 rounded-3xl bg-surface-container mb-6 flex items-center justify-center relative shadow-inner">
+                    <span class="material-symbols-outlined text-5xl text-on-surface-variant">sync_alt</span>
+                    <div id="sync-indicator" class="absolute -top-1 -right-1 w-6 h-6 bg-error rounded-full border-4 border-surface-container-lowest animate-pulse"></div>
+                </div>
+
+                <h2 class="font-headline text-2xl font-bold mb-3">Datos de Ruta Desactualizados</h2>
+                <p class="text-sm text-on-surface-variant max-w-sm mb-10 leading-relaxed">
+                    La topografía de la ruta Palena y los horarios de transbordadores requieren actualización antes de salir de la zona con cobertura.
+                </p>
+
+                <button id="sync-button" onclick="handleSync()" class="w-full max-w-md py-5 rounded-2xl bg-primary text-on-primary font-headline font-bold text-lg flex items-center justify-center gap-3 shadow-xl hover:scale-[1.02] active:scale-95 transition-all z-10">
+                    <span class="material-symbols-outlined fill-icon">cloud_download</span>
+                    <span id="button-text">Sincronizar Datos de Ruta</span>
+                </button>
+
+                <!-- Barra de Progreso -->
+                <div id="progress-container" class="hidden w-full max-w-md mt-8 animate-in fade-in slide-in-from-top-4">
+                    <div class="flex justify-between text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-3 px-1">
+                        <span id="progress-status">Descargando topología...</span>
+                        <span id="progress-percent">0%</span>
+                    </div>
+                    <div class="w-full h-3 bg-surface-container-high rounded-full overflow-hidden">
+                        <div id="progress-bar" class="h-full bg-primary w-0 transition-all duration-300 ease-out"></div>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex items-center gap-2 text-xs font-bold text-on-surface-variant/40">
+                    <span class="material-symbols-outlined text-sm">history</span>
+                    <span>Última sincronización: Hace 14 horas</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta de Protocolo Técnica -->
+        <div class="md:col-span-4 bg-surface-container-high rounded-[2rem] p-8 border border-outline-variant/30 flex flex-col justify-between">
+            <div>
+                <div class="w-12 h-12 rounded-2xl bg-surface-container-highest flex items-center justify-center mb-8 text-primary shadow-sm">
+                    <span class="material-symbols-outlined">priority_high</span>
+                </div>
+                <h3 class="font-headline text-xl font-bold mb-4">Protocolo de Zona</h3>
+                <p class="text-sm text-on-surface-variant leading-relaxed">
+                    Es un requisito estricto descargar los datos en el <strong class="text-on-surface">Hub Principal de Puerto Montt</strong> antes de dirigirse hacia Hornopirén.
+                </p>
+                <p class="text-sm text-on-surface-variant mt-4 leading-relaxed opacity-70">
+                    Las zonas más allá carecen de infraestructura celular confiable para navegación en tiempo real.
+                </p>
+            </div>
+            <div class="mt-8 pt-6 border-t border-outline-variant/30 flex items-center gap-3">
+                <div class="w-2 h-10 rounded-full bg-primary"></div>
+                <span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant leading-tight">Requerido para el tránsito bimodal</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Nueva Tarjeta de Oportunidad de Retorno -->
+    <section class="mt-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <article class="bg-secondary-fixed text-on-secondary-fixed-variant rounded-[2rem] p-6 md:p-8 border border-outline-variant/30 shadow-md flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden relative">
+            <!-- Glow decorativo de fondo -->
+            <div class="absolute -top-10 -left-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl"></div>
+
+            <div class="flex items-center gap-6 z-10">
+                <div class="w-16 h-16 rounded-2xl bg-white/50 backdrop-blur-sm flex items-center justify-center shadow-sm">
+                    <!-- Icono de camión invertido para simular retorno -->
+                    <span class="material-symbols-outlined text-4xl transform scale-x-[-1]">local_shipping</span>
+                </div>
+                <div>
+                    <div class="flex flex-wrap items-center gap-3 mb-2">
+                        <h2 class="font-headline text-xl font-bold">Oportunidad de Retorno Detectada</h2>
+                        <span class="bg-primary text-on-primary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest shadow-sm">Ahorro estimado: 40%</span>
+                    </div>
+                    <p class="text-sm font-medium opacity-90 leading-relaxed">Carga disponible en <strong class="text-on-surface">Quellón</strong> para subir a <strong class="text-on-surface">Puerto Montt</strong></p>
+                </div>
+            </div>
+
+            <button onclick="handleSync()" class="w-full md:w-auto px-8 py-4 rounded-2xl bg-primary text-on-primary font-headline font-bold hover:shadow-lg transition-all active:scale-95 whitespace-nowrap z-10">
+                Aceptar y Sincronizar
+            </button>
+        </article>
+    </section>
+
+    <!-- Mapa de Carga Inteligente -->
+    <section class="mt-8 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150">
+        <div class="bg-surface-container-lowest rounded-[2rem] p-6 md:p-8 border border-outline-variant/30 shadow-sm">
+            <h2 class="font-headline text-2xl font-bold mb-6 text-on-surface">Mapa de Carga Inteligente</h2>
+            
+            <div class="flex flex-col md:flex-row items-center gap-10">
+                <!-- Representación Visual del Camión (Vista de Planta/Corte) -->
+                <div class="w-full max-w-[260px] mx-auto md:mx-0 bg-surface-container-low border-x-4 border-t-4 border-on-surface rounded-t-3xl p-4 flex flex-col gap-3 relative shadow-inner">
+                    <!-- Bloque A: Fondo (Zona Remota) -->
+                    <div onclick="openEstibaModal('A')" class="h-24 bg-[#FFF7ED] border-2 border-[#F97316] border-dashed rounded-2xl flex flex-col items-center justify-center text-center p-2 group hover:bg-[#FFEDD5] transition-colors cursor-pointer">
+                        <span class="text-xs font-black text-[#9A3412] tracking-tighter mb-1">BLOQUE A</span>
+                        <p class="text-[10px] font-bold text-[#7C2D12] uppercase leading-tight">Zona Remota<br>(ej. Chaitén)</p>
+                        <span class="material-symbols-outlined text-[#EA580C] text-sm mt-1">distance</span>
+                    </div>
+
+                    <!-- Bloque B: Zona Intermedia -->
+                    <div onclick="openEstibaModal('B')" class="h-20 border-2 border-outline-variant rounded-2xl flex items-center justify-center text-on-surface-variant/30 cursor-pointer hover:bg-surface-container transition-colors">
+                        <span class="text-xs font-bold uppercase tracking-widest">Bloque B</span>
+                    </div>
+
+                    <!-- Bloque C: Puerta (Entrega Inmediata) -->
+                    <div onclick="openEstibaModal('C')" class="h-24 bg-[#F0FDF4] border-2 border-[#22C55E] border-dashed rounded-2xl flex flex-col items-center justify-center text-center p-2 group hover:bg-[#DCFCE7] transition-colors cursor-pointer animate-blink-gentle">
+                        <span class="text-xs font-black text-[#166534] tracking-tighter mb-1">BLOQUE C</span>
+                        <p class="text-[10px] font-bold text-[#14532D] uppercase leading-tight">Entrega Inmediata</p>
+                        <span class="material-symbols-outlined text-[#16A34A] text-sm mt-1">door_front</span>
+                    </div>
+
+                    <!-- Indicador de Puerta / Acceso -->
+                    <div class="absolute -bottom-1 left-0 right-0 h-1 bg-on-surface rounded-full"></div>
+                    <div class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest whitespace-nowrap">Puerta / Descarga de Bultos</div>
+                </div>
+
+                <!-- Detalles de la Leyenda -->
+                <div class="flex-1 space-y-6">
+                    <div>
+                        <h3 class="font-headline text-xl font-bold mb-3 flex items-center gap-2 text-primary">
+                            <span class="material-symbols-outlined">inventory_2</span>
+                            Eficiencia de Carga
+                        </h3>
+                        <p class="text-sm text-on-surface-variant leading-relaxed">
+                            Optimización algorítmica de la disposición de carga. Los bultos con destino final se ubican al fondo para evitar movimientos innecesarios en transbordadores.
+                        </p>
+                    </div>
+                    
+                    <div class="inline-flex items-center gap-3 px-5 py-3 bg-surface-container rounded-2xl border border-outline-variant/30 shadow-sm">
+                        <span class="material-symbols-outlined text-primary fill-icon">offline_pin</span>
+                        <span class="text-xs font-bold text-on-surface uppercase tracking-wide">Optimización de Tetris Logístico - Disponible Offline</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Mapa de Topología -->
+    <section class="mt-8 bg-surface-container-lowest rounded-[2rem] p-4 border border-outline-variant/20 shadow-sm overflow-hidden group">
+        <div class="flex justify-between items-center mb-6 px-4 py-2">
+            <div>
+                <h2 class="font-headline text-xl font-bold">Topología: Ruta Bimodal Palena</h2>
+                <p class="text-xs text-on-surface-variant font-medium">Tramo crítico Hornopirén - Caleta Gonzalo</p>
+            </div>
+            <span class="bg-primary/10 text-primary px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest">Caché Local Activa</span>
+        </div>
+        <div class="relative h-[450px] rounded-[1.5rem] bg-surface-container-low border border-outline-variant/10 overflow-hidden">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWGzVGRQlWkNS3-RsqCccKKJk82yGtXfJgnu8iu73z6cqT0ZXIrqyUg4XhrInSBVRovK3ggJOu4lD3_LljEqKo3x7HM-t1XZrIbpngzyl661KsYHKFIOJtQfjUPJz8Bk-oJhVbeFj73nr5UVuHGOlfHqxCg6W4diYzArmmAaPJrEtBXFLgRT_sSIB0qJNIVQjoBkQpI4se1mRC_0SOd7G2JVYu9TOEtBPfxXpu8fWHYGYBCJznURYX5Wy8-37zE9qIyBGl2p1JZ1o" 
+                 class="w-full h-full object-cover opacity-80 mix-blend-multiply transition-transform duration-1000 group-hover:scale-105" alt="Mapa de Ruta">
+            <div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest/40 to-transparent"></div>
+            
+            <!-- Ferry Marker -->
+            <div class="absolute top-1/3 left-1/3 flex flex-col items-center gap-2">
+                <div class="bg-surface-container-lowest px-3 py-1 rounded-lg shadow-sm text-[10px] font-bold">Hornopirén</div>
+                <div class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-lg border-2 border-white">
+                    <span class="material-symbols-outlined text-sm fill-icon">directions_boat</span>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Modal Detalle de Estiba -->
+<div id="estiba-modal" class="fixed inset-0 bg-black/50 z-[60] hidden flex items-center justify-center p-4">
+    <div class="bg-surface-container-lowest w-full max-w-md rounded-3xl shadow-2xl p-8 relative border border-outline-variant/30">
+        <button onclick="closeEstibaModal()" class="absolute top-4 right-4 p-2 hover:bg-surface-container-high rounded-full transition-colors">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+        <h2 id="modal-block-title" class="font-headline text-2xl font-bold mb-6 text-on-surface">Detalle de Carga</h2>
+        <div id="modal-block-content" class="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+            <!-- Contenido dinámico -->
+        </div>
+    </div>
+</div>
+
+<script>
+    // Función para mostrar notificación global
+    function showGlobalNotification(message) {
+        const toast = document.getElementById('global-notification');
+        const text = document.getElementById('notification-text');
+        if (toast && text) {
+            text.innerText = message;
+            toast.classList.remove('-translate-y-20', 'opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                toast.classList.add('-translate-y-20', 'opacity-0', 'pointer-events-none');
+            }, 5000);
+        }
+    }
+
+    // Inicializar estado de sincronización desde localStorage
+    document.addEventListener('DOMContentLoaded', () => {
+        document.body.classList.add('loaded');
+
+        // Lógica de Fade-out para navegación
+        const navLinks = document.querySelectorAll('a[href$=".html"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = link.href;
+                document.body.classList.remove('loaded');
+                setTimeout(() => {
+                    window.location.href = target;
+                }, 500);
+            });
+        });
+
+        // Simulación de nuevas cargas (Global)
+        setInterval(() => {
+            const locations = ['Ancud', 'Castro', 'Chaitén', 'Quellón'];
+            const loc = locations[Math.floor(Math.random() * locations.length)];
+            const weight = Math.floor(Math.random() * 600) + 100;
+            showGlobalNotification(`Nueva oportunidad: ${weight}kg disponibles en ${loc}`);
+        }, 20000);
+
+        if (localStorage.getItem('syncStatus') === 'complete') {
+            const btn = document.getElementById('sync-button');
+            const btnText = document.getElementById('button-text');
+            const indicator = document.getElementById('sync-indicator');
+
+            btnText.innerText = "Ahora";
+            btn.classList.replace('bg-primary', 'bg-secondary-container');
+            btn.classList.add('text-on-secondary-container');
+            indicator.classList.replace('bg-error', 'bg-primary-container');
+            indicator.classList.remove('animate-pulse');
+        }
+    });
+
+    const estibaData = {
+        A: {
+            title: "Bloque A - Zona Remota",
+            items: [
+                { guia: "RT-8821", peso: "150kg", destinatario: "Maderas Palena" },
+                { guia: "RT-8825", peso: "80kg", destinatario: "Comercial Futaleufú" }
+            ]
+        },
+        B: {
+            title: "Bloque B - Zona Intermedia",
+            items: [
+                { guia: "RT-9012", peso: "45kg", destinatario: "Ferretería Chaitén" }
+            ]
+        },
+        C: {
+            title: "Bloque C - Entrega Inmediata",
+            items: [
+                { guia: "RT-9100", peso: "20kg", destinatario: "Hotel Hornopirén" },
+                { guia: "RT-9105", peso: "35kg", destinatario: "Almacén El Cruce" }
+            ]
+        }
+    };
+
+    function openEstibaModal(block) {
+        const modal = document.getElementById('estiba-modal');
+        const title = document.getElementById('modal-block-title');
+        const content = document.getElementById('modal-block-content');
+        
+        const data = estibaData[block];
+        title.innerText = data.title;
+        
+        content.innerHTML = data.items.map(item => `
+            <div class="bg-surface-container p-4 rounded-2xl border border-outline-variant/20 hover:border-primary/30 transition-colors">
+                <div class="flex justify-between items-start mb-2">
+                    <span class="text-[10px] font-black text-primary uppercase tracking-widest bg-primary-container px-2 py-0.5 rounded">Guía: ${item.guia}</span>
+                    <span class="bg-surface-container-highest px-2 py-1 rounded text-[10px] font-bold text-on-surface-variant">${item.peso}</span>
+                </div>
+                <p class="text-sm font-bold text-on-surface">${item.destinatario}</p>
+            </div>
+        `).join('');
+        
+        modal.classList.remove('hidden');
+        document.body.classList.add('modal-active');
+    }
+
+    function closeEstibaModal() {
+        const modal = document.getElementById('estiba-modal');
+        modal.classList.add('hidden');
+        document.body.classList.remove('modal-active');
+    }
+
+    function handleSync() {
+        const btn = document.getElementById('sync-button');
+        const btnText = document.getElementById('button-text');
+        const progressContainer = document.getElementById('progress-container');
+        const progressBar = document.getElementById('progress-bar');
+        const progressPercent = document.getElementById('progress-percent');
+        const indicator = document.getElementById('sync-indicator');
+
+        btn.disabled = true;
+        btn.classList.add('opacity-50', 'pointer-events-none');
+        progressContainer.classList.remove('hidden');
+
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += Math.floor(Math.random() * 15) + 5;
+            if (progress >= 100) {
+                progress = 100;
+                clearInterval(interval);
+                
+                // Finalizar Sincronización
+                setTimeout(() => {
+                    localStorage.setItem('syncStatus', 'complete');
+                    btnText.innerText = "Ahora";
+                    btn.classList.replace('bg-primary', 'bg-secondary-container');
+                    btn.classList.add('text-on-secondary-container');
+                    indicator.classList.replace('bg-error', 'bg-primary-container');
+                    indicator.classList.remove('animate-pulse');
+                    alert("Datos de ruta actualizados. Buen viaje, conductor.");
+                }, 500);
+            }
+            progressBar.style.width = progress + '%';
+            progressPercent.innerText = progress + '%';
+        }, 300);
+    }
+</script>
+
+</body>
+</html>

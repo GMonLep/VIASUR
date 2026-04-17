@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary": "#163428",
+                    "background": "#f8faf5",
+                    "tertiary-container": "#35493f",
+                    "secondary": "#725a45",
+                    "on-tertiary-fixed": "#0b1f17",
+                    "error-container": "#ffdad6",
+                    "surface-container-low": "#f2f4f0",
+                    "inverse-on-surface": "#f0f1ed",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary": "#1e3329",
+                    "tertiary-fixed": "#d0e8da",
+                    "surface-variant": "#e1e3df",
+                    "surface-container": "#edeeea",
+                    "on-primary": "#ffffff",
+                    "inverse-primary": "#adcebd",
+                    "on-primary-fixed-variant": "#2f4d40",
+                    "surface-dim": "#d9dbd6",
+                    "primary-fixed-dim": "#adcebd",
+                    "on-tertiary-container": "#a1b8ab",
+                    "error": "#ba1a1a",
+                    "on-secondary-fixed-variant": "#58422f",
+                    "surface-container-high": "#e7e9e4",
+                    "on-secondary": "#ffffff",
+                    "outline-variant": "#c1c8c3",
+                    "on-background": "#191c1a",
+                    "on-tertiary": "#ffffff",
+                    "secondary-container": "#fedcc2",
+                    "on-error": "#ffffff",
+                    "secondary-fixed-dim": "#e0c1a7",
+                    "surface-tint": "#466557",
+                    "on-primary-container": "#99baa9",
+                    "on-surface-variant": "#424844",
+                    "primary-fixed": "#c8ead8",
+                    "on-error-container": "#93000a",
+                    "outline": "#727974",
+                    "inverse-surface": "#2e312e",
+                    "primary-container": "#2d4b3e",
+                    "surface-bright": "#f8faf5",
+                    "on-primary-fixed": "#012116",
+                    "tertiary-fixed-dim": "#b5ccbf",
+                    "on-surface": "#191c1a",
+                    "surface-container-highest": "#e1e3df",
+                    "on-tertiary-fixed-variant": "#374b41",
+                    "secondary-fixed": "#fedcc2",
+                    "on-secondary-container": "#78604b",
+                    "surface": "#f8faf5",
+                    "on-secondary-fixed": "#291808"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Space Grotesk"],
+                    "body": ["Manrope"],
+                    "label": ["Manrope"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .tonal-shift-bg {
+            background: linear-gradient(135deg, #f8faf5 0%, #f2f4f0 100%);
+        }
+        .map-gradient-overlay {
+            background: linear-gradient(to bottom, rgba(22, 52, 40, 0.4) 0%, transparent 15%, transparent 85%, rgba(22, 52, 40, 0.4) 100%);
+        }
+        .animate-fade-up { animation: fade-up 0.75s ease-out both; }
+        .animate-pop { animation: pop-in 0.65s ease-out both; }
+        .animate-nav-item { animation: fade-in-nav 0.65s ease-out both; }
+        @keyframes fade-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0);} }
+        @keyframes pop-in { from { opacity: 0; transform: translateY(10px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes fade-in-nav { from { opacity: 0; transform: translateY(10px);} to { opacity: 1; transform: translateY(0);} }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky z-50 bg-[#f8faf5] dark:bg-[#163428] flex justify-between items-center px-6 py-4 w-full shadow-none animate-pop">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-[#163428] dark:text-[#c8ead8]">navigation</span>
+<h1 class="font-['Space_Grotesk'] font-bold text-[#163428] dark:text-[#f8faf5] tracking-tighter text-xl">ViaSur</h1>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-['Space_Grotesk'] uppercase tracking-widest text-sm text-[#163428] dark:text-[#c8ead8]">Mapas offline</span>
+<span class="material-symbols-outlined text-[#163428] dark:text-[#c8ead8]">cloud_download</span>
+</div>
+</header>
+<nav class="mt-2 w-full bg-[#f8faf5] dark:bg-[#163428] border-b border-outline-variant/30 px-6 py-3 flex flex-wrap items-center justify-center gap-3 animate-fade-up">
+<a href="home.html" class="flex items-center gap-2 text-sm font-semibold text-primary hover:text-secondary"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>Inicio</a>
+<a href="carga.html" class="flex items-center gap-2 text-sm font-semibold text-primary hover:text-secondary"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">inventory_2</span>Carga</a>
+<a href="ruta.html" class="flex items-center gap-2 text-sm font-semibold text-primary hover:text-secondary"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">explore</span>Ruta</a>
+<a href="retorno.html" class="flex items-center gap-2 text-sm font-semibold text-primary hover:text-secondary"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">swap_horiz</span>Retorno</a>
+<a href="nav.html" class="flex items-center gap-2 text-sm font-semibold text-white bg-primary px-4 py-2 rounded-full"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">navigation</span>Navegación</a>
+</nav>
+<div class="bg-[#f2f4f0] dark:bg-[#2d4b3e] h-[2px] w-full"></div>
+<main class="flex-1 flex overflow-hidden relative animate-fade-up">
+<!-- Vertical Timeline (Side Navigation) -->
+<aside class="w-24 h-full bg-surface-container-low border-r border-outline-variant/15 flex flex-col items-center py-8 gap-12 z-20 animate-fade-up">
+<div class="relative flex flex-col items-center flex-1 h-full">
+<!-- Progress Line Background -->
+<div class="absolute w-1 bg-outline-variant/30 h-full rounded-full"></div>
+<!-- Progress Line Active -->
+<div class="absolute w-1 bg-primary h-1/4 rounded-full top-0"></div>
+<!-- Segments -->
+<div class="flex flex-col justify-between h-full items-center z-10">
+<div class="flex flex-col items-center gap-2">
+<div class="w-12 h-12 rounded-lg bg-primary text-on-primary flex items-center justify-center shadow-lg">
+<span class="material-symbols-outlined" data-icon="directions_car">directions_car</span>
+</div>
+<span class="font-label text-[10px] font-bold uppercase tracking-tighter text-primary">Carretera</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-12 h-12 rounded-lg bg-surface-container-highest text-on-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="anchor">anchor</span>
+</div>
+<span class="font-label text-[10px] font-medium uppercase tracking-tighter text-on-surface-variant">Rampa</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-12 h-12 rounded-lg bg-surface-container-highest text-on-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="directions_boat">directions_boat</span>
+</div>
+<span class="font-label text-[10px] font-medium uppercase tracking-tighter text-on-surface-variant">Barcaza</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-12 h-12 rounded-lg bg-surface-container-highest text-on-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="flag">flag</span>
+</div>
+<span class="font-label text-[10px] font-medium uppercase tracking-tighter text-on-surface-variant">Destino</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Workspace (Map + Overlays) -->
+<section class="flex-1 relative flex flex-col">
+<!-- Synchronization Alert Card (Top Overlay) -->
+<div class="absolute top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-2xl z-30">
+<div class="bg-primary-fixed text-on-primary-fixed-variant p-5 rounded-xl shadow-xl flex items-center justify-between gap-6 border-b-4 border-primary">
+<div class="flex items-center gap-4">
+<div class="bg-primary-fixed-dim p-3 rounded-full">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">timer</span>
+</div>
+<div>
+<p class="font-headline text-lg font-bold leading-none mb-1">Ventana de Zarpe: 14:30 hrs</p>
+<p class="font-label text-sm font-medium opacity-80 uppercase tracking-wide">ETA Estimado: 14:15 hrs</p>
+</div>
+</div>
+<div class="text-right">
+<span class="inline-block px-3 py-1 bg-primary text-primary-fixed text-[10px] font-bold rounded-full mb-1 uppercase tracking-widest">A TIEMPO</span>
+<p class="font-label text-xs font-bold text-primary">MANTENER VELOCIDAD</p>
+</div>
+</div>
+</div>
+<!-- Offline Vector Map (Center) -->
+<div class="flex-1 bg-inverse-surface relative overflow-hidden">
+<img class="w-full h-full object-cover opacity-40 grayscale invert" data-alt="top-down high contrast dark themed navigation map with glowing route lines and topographic details of Chilean fjords" data-location="Puelche, Chile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfRevgO37nwiiCXok5jpqwQwmPcIaIMoiORvcSQwckScTjclNJcJg5kUOn3N4LBq2jsMwx5Ryy-pzSb2YsOh5jzTJzWnByOckqYWCvJi8-kRQhdonvA8dZQQc6tpHtM9k-9sfkaiX3AgAjYfPuTHr0hTRCyHouAdbGiTrx_SWwUnxxShIYRFbBVYd06YLqcZ4JVjb3Q4Q1uDPb0SzbVt_O41Q_xbCHsNs_27Na8vJy7U5wVHqV_9xpppeXsdV-y1GLrT4Ixdzzu_8"/>
+<!-- Map UI Elements Overlay -->
+<div class="absolute inset-0 map-gradient-overlay pointer-events-none"></div>
+<!-- POIs -->
+<div class="absolute top-1/2 left-1/3 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+<div class="bg-primary p-2 rounded-full border-2 border-primary-fixed shadow-[0_0_20px_rgba(200,234,216,0.4)] mb-2">
+<span class="material-symbols-outlined text-primary-fixed text-2xl" data-icon="anchor">anchor</span>
+</div>
+<div class="bg-primary px-3 py-1 rounded shadow-lg">
+<span class="font-headline text-white text-xs font-bold uppercase tracking-widest">Rampa Puelche</span>
+</div>
+</div>
+<div class="absolute bottom-1/4 right-1/3 flex flex-col items-center">
+<div class="bg-secondary p-1.5 rounded-full mb-1">
+<span class="material-symbols-outlined text-white text-lg" data-icon="bolt">bolt</span>
+</div>
+<span class="font-label text-[#c1c8c3] text-[10px] font-bold bg-inverse-surface/80 px-2 py-0.5 rounded">Punto de Se�al 4G</span>
+</div>
+<!-- Route Line -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none" preserveaspectratio="none" viewbox="0 0 1000 1000">
+<path d="M 0 900 Q 300 850 400 500 T 800 200" fill="none" opacity="0.8" stroke="#c8ead8" stroke-dasharray="12 8" stroke-width="6"></path>
+<circle cx="400" cy="500" fill="#163428" r="8" stroke="#c8ead8" stroke-width="3"></circle>
+</svg>
+</div>
+<!-- Floating Action Button -->
+<button class="absolute bottom-10 right-10 bg-error text-on-error flex items-center gap-3 px-6 py-5 rounded-xl shadow-2xl hover:bg-error/90 transition-all active:scale-95 group z-40">
+<span class="material-symbols-outlined text-2xl" data-icon="warning">warning</span>
+<span class="font-headline font-bold text-sm uppercase tracking-widest">Reporte Obstáculo</span>
+</button>
+<!-- Metadata Overlay (Lower Left) -->
+<div class="absolute bottom-10 left-6 z-30">
+<div class="bg-surface-container-lowest/90 backdrop-blur-md p-4 rounded-lg shadow-lg border-l-4 border-secondary flex flex-col gap-2">
+<div class="flex items-center gap-4">
+<span class="font-label text-[10px] text-on-surface-variant font-bold uppercase tracking-wider">LAT: 41.7451 S</span>
+<span class="font-label text-[10px] text-on-surface-variant font-bold uppercase tracking-wider">LON: 72.6421 W</span>
+</div>
+<div class="flex items-end gap-2">
+<span class="font-headline text-3xl font-black text-primary leading-none">62</span>
+<span class="font-label text-xs font-bold text-on-surface-variant mb-1 uppercase tracking-widest">KM/H</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-[#f8faf5]/80 dark:bg-[#163428]/90 backdrop-blur-xl z-50 rounded-t-lg shadow-[0_-10px_30px_rgba(25,28,26,0.04)] border-t border-[#c1c8c3]/15">
+<a class="flex flex-col items-center justify-center text-[#163428] dark:text-[#f8faf5] px-5 py-2 hover:text-secondary transition-all duration-300 ease-in-out" href="home.html">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label text-[10px] font-bold uppercase tracking-wider mt-1">Inicio</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#163428] dark:text-[#f8faf5] px-5 py-2 hover:text-secondary transition-all duration-300 ease-in-out" href="carga.html">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<span class="font-label text-[10px] font-bold uppercase tracking-wider mt-1">Carga</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#163428] dark:text-[#f8faf5] px-5 py-2 hover:text-secondary transition-all duration-300 ease-in-out" href="ruta.html">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">explore</span>
+<span class="font-label text-[10px] font-bold uppercase tracking-wider mt-1">Ruta</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary text-white rounded-xl px-5 py-2 transition-all duration-300 ease-in-out" href="nav.html">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">navigation</span>
+<span class="font-label text-[10px] font-bold uppercase tracking-wider mt-1">Navegación</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#163428] dark:text-[#f8faf5] px-5 py-2 hover:text-secondary transition-all duration-300 ease-in-out" href="retorno.html">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">swap_horiz</span>
+<span class="font-label text-[10px] font-bold uppercase tracking-wider mt-1">Retorno</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#163428] dark:text-[#f8faf5] px-5 py-2 hover:text-secondary transition-all duration-300 ease-in-out" href="nav.html">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">navigation</span>
+<span class="font-label text-[10px] font-bold uppercase tracking-wider mt-1">Navegación</span>
+</a>
+</nav>
+<div class="flex flex-col items-center justify-center text-[#163428] dark:text-[#c8ead8] bg-[#c8ead8]/30 rounded-lg px-4 py-1">
+<span class="material-symbols-outlined" data-icon="route">route</span>
+<span class="font-['Manrope'] font-bold text-[11px] uppercase tracking-wider">Route</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#424844] dark:text-[#c1c8c3] opacity-60">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+<span class="font-['Manrope'] font-bold text-[11px] uppercase tracking-wider">Map</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#424844] dark:text-[#c1c8c3] opacity-60">
+<span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
+<span class="font-['Manrope'] font-bold text-[11px] uppercase tracking-wider">Assets</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#424844] dark:text-[#c1c8c3] opacity-60">
+<span class="material-symbols-outlined" data-icon="history_edu">history_edu</span>
+<span class="font-['Manrope'] font-bold text-[11px] uppercase tracking-wider">Logs</span>
+</div>
+</footer>
+</body></html>

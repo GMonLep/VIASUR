@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html class="light" lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Carga de Retorno - ViaSur</title>
+    <link href="css/styles.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <style>
+        body { font-family: 'Manrope', sans-serif; min-height: 100dvh; opacity: 0; transition: opacity 0.5s ease-in-out; }
+        body.loaded { opacity: 1; }
+        h1, h2, h3, .font-headline { font-family: 'Space Grotesk', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
+        .fill-icon { font-variation-settings: 'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
+        .animate-fade-up { animation: fade-up 0.75s ease-out both; }
+        .animate-pop { animation: pop-in 0.65s ease-out both; }
+        .animate-nav-item { animation: fade-in-nav 0.65s ease-out both; }
+        @keyframes fade-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0);} }
+        @keyframes pop-in { from { opacity: 0; transform: translateY(10px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes fade-in-nav { from { opacity: 0; transform: translateY(10px);} to { opacity: 1; transform: translateY(0);} }
+    </style>
+</head>
+<body class="bg-surface text-on-surface antialiased pt-16 md:pl-[320px] pb-32 md:pb-8 select-none">
+
+<!-- Global Notification Toast -->
+<div id="global-notification" class="fixed top-4 left-1/2 -translate-x-1/2 z-[100] transform -translate-y-20 opacity-0 transition-all duration-500 ease-out pointer-events-none">
+    <div class="bg-[#163428] text-white px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-4 border border-outline-variant/20 backdrop-blur-md">
+        <div class="bg-secondary-container text-on-secondary-container p-2 rounded-xl"><span class="material-symbols-outlined fill-icon text-sm">local_shipping</span></div>
+        <div class="flex flex-col"><span class="text-[10px] font-bold uppercase tracking-widest opacity-70">Radar ViaSur</span><span id="notification-text" class="text-sm font-bold">Oportunidad detectada</span></div>
+    </div>
+</div>
+
+<!-- Header -->
+<header class="fixed top-0 w-full z-40 flex justify-between items-center px-6 py-4 bg-surface-bright/80 backdrop-blur-md shadow-sm md:ml-[320px] md:w-[calc(100%-320px)] border-b border-outline-variant/30 animate-pop">
+    <div class="flex items-center gap-4">
+        <a href="home.html" class="material-symbols-outlined text-primary cursor-pointer hover:bg-surface-container p-2 rounded-full transition-colors">arrow_back</a>
+        <div>
+            <a href="home.html" class="font-headline text-2xl font-bold tracking-tighter text-primary">ViaSur</a>
+            <p class="text-xs uppercase tracking-[0.25em] text-on-surface-variant mt-1">Carga de Retorno</p>
+        </div>
+    </div>
+    <span class="material-symbols-outlined text-primary cursor-pointer p-2 hover:bg-surface-container rounded-full transition-colors">radar</span>
+</header>
+<nav class="mt-2 w-full bg-surface-bright dark:bg-[#163428] border-b border-outline-variant/30 px-6 py-3 flex flex-wrap justify-center gap-3 animate-fade-up">
+    <a href="home.html" class="flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-primary hover:text-secondary"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>Inicio</a>
+    <a href="carga.html" class="flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-primary hover:text-secondary"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">inventory_2</span>Carga</a>
+    <a href="ruta.html" class="flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-primary hover:text-secondary"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">explore</span>Ruta</a>
+    <a href="retorno.html" class="flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-white bg-primary px-4 py-2 rounded-full"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">swap_horiz</span>Retorno</a>
+    <a href="nav.html" class="flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-primary hover:text-secondary"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">navigation</span>Navegación</a>
+</nav>
+
+<!-- Sidebar Desktop -->
+<aside class="hidden md:flex fixed inset-y-0 left-0 z-50 flex-col w-[320px] bg-surface-container-low border-r border-outline-variant/30 p-6 animate-fade-up">
+    <div class="p-6 mb-4"><h2 class="font-headline font-bold text-xl text-primary">Radar Logístico</h2></div>
+    <nav class="space-y-2 flex-1">
+        <a href="home.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl"><span class="material-symbols-outlined">home</span> Inicio</a>
+        <a href="carga.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl"><span class="material-symbols-outlined">inventory_2</span> Carga</a>
+        <a href="retorno.html" class="flex items-center gap-3 px-4 py-3 bg-primary text-white rounded-xl font-bold shadow-md"><span class="material-symbols-outlined fill-icon">swap_horiz</span> Retorno</a>
+        <a href="ruta.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl"><span class="material-symbols-outlined">explore</span> Ruta</a>
+        <a href="nav.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl"><span class="material-symbols-outlined">navigation</span> Navegación</a>
+    </nav>
+</aside>
+
+<!-- Main Content -->
+<main class="container mx-auto px-6 max-w-5xl pt-8">
+    <!-- Hero Section -->
+    <section class="mb-10 animate-in fade-in slide-in-from-top-4 duration-700">
+        <div class="bg-primary text-white rounded-[2rem] p-8 md:p-10 shadow-xl relative overflow-hidden group border border-white/10">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-primary-container opacity-10 -mr-20 -mt-20 rounded-full blur-3xl transition-transform group-hover:scale-110 duration-1000"></div>
+            <div class="relative z-10">
+                <span class="inline-block bg-white/10 backdrop-blur-md text-primary-fixed px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6">Cálculo de Eficiencia</span>
+                <h2 class="text-3xl md:text-4xl font-headline font-bold mb-8 max-w-xl leading-tight">Aceptando esta carga, cubres el <span class="text-secondary-fixed">100% del costo</span> del combustible de regreso.</h2>
+                
+                <div class="space-y-4">
+                    <div class="flex justify-between items-end"><span class="text-sm font-bold opacity-70 uppercase tracking-tighter">Optimización de Retorno</span><span class="text-3xl font-headline font-black">100%</span></div>
+                    <div class="h-4 w-full bg-white/10 rounded-full overflow-hidden border border-white/5 p-1">
+                        <div class="h-full w-full bg-gradient-to-r from-primary-fixed to-white rounded-full"></div>
+                    </div>
+                    <p class="text-[10px] opacity-50 font-medium italic">Estimación basada en consumo promedio Scania G410 Diesel Grado B.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Objetivos de Retorno -->
+    <section class="mb-10 grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
+        <div class="rounded-[2rem] border border-white/15 bg-white/10 backdrop-blur-xl shadow-[0_30px_80px_-50px_rgba(22,52,40,0.35)] p-8">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <p class="text-[10px] uppercase tracking-[0.35em] text-on-surface-variant">Objetivo</p>
+                    <h2 class="text-3xl font-headline font-extrabold text-primary">Retorno inmediato, claro y motivante</h2>
+                </div>
+                <div id="ganancia-estimada-badge" class="inline-flex items-center gap-2 rounded-full bg-primary text-white px-4 py-2 text-sm font-bold shadow-lg">
+                    <span class="material-symbols-outlined">attach_money</span>
+                    Ganancia Neta Estimada +$1.260.000
+                </div>
+            </div>
+            <div class="mt-8 grid gap-4 md:grid-cols-3">
+                <div class="rounded-[1.8rem] border border-white/15 bg-surface p-4 shadow-sm backdrop-blur-xl">
+                    <p class="text-[10px] uppercase tracking-[0.35em] text-on-surface-variant mb-3">Impacto Social</p>
+                    <h3 class="text-lg font-bold text-primary">Cooperativa de Mujeres Tejedoras</h3>
+                    <p class="text-sm text-on-surface-variant mt-2">Esta carga financia a la asociación local y genera ingresos directos para pequeñas emprendedoras.</p>
+                </div>
+                <div class="rounded-[1.8rem] border border-white/15 bg-surface p-4 shadow-sm backdrop-blur-xl">
+                    <p class="text-[10px] uppercase tracking-[0.35em] text-on-surface-variant mb-3">Eficiencia de Combustible</p>
+                    <div class="flex items-end gap-3">
+                        <span class="text-4xl font-black text-primary">22L</span>
+                        <span class="text-sm text-on-surface-variant">recuperados</span>
+                    </div>
+                    <div class="mt-4 h-2 rounded-full bg-primary/10 overflow-hidden">
+                        <div class="h-full w-[88%] bg-primary"></div>
+                    </div>
+                </div>
+                <div class="rounded-[1.8rem] border border-white/15 bg-surface p-4 shadow-sm backdrop-blur-xl">
+                    <p class="text-[10px] uppercase tracking-[0.35em] text-on-surface-variant mb-3">Impacto Económico</p>
+                    <p class="text-lg font-bold text-primary">+32% ingreso neto</p>
+                    <p class="text-sm text-on-surface-variant mt-2">Combina carga de retorno con trazabilidad completa y prioridad comercial.</p>
+                </div>
+            </div>
+        </div>
+        <div class="rounded-[2rem] border border-white/15 bg-white/10 backdrop-blur-xl shadow-[0_30px_80px_-50px_rgba(22,52,40,0.35)] p-8">
+            <p class="text-[10px] uppercase tracking-[0.35em] text-on-surface-variant">Contexto</p>
+            <h3 class="text-2xl font-headline font-bold text-primary mt-3">Apoyas a la economía local</h3>
+            <p class="text-sm text-on-surface-variant mt-4 leading-relaxed">Estas cargas conectan productores de la Región de Los Lagos con mercados estratégicos y refuerzan el trabajo de asociaciones locales que necesitan transporte confiable.</p>
+        </div>
+    </section>
+
+    <!-- Cargas Dinámicas -->
+    <section class="mb-12">
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between mb-6">
+            <div>
+                <p class="text-[10px] uppercase tracking-[0.35em] text-on-surface-variant">Cargas reales</p>
+                <h3 class="text-3xl font-headline font-extrabold text-primary">Detalle de rutas Región de Los Lagos</h3>
+            </div>
+            <span id="cargas-count" class="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-bold text-primary">3 oportunidades</span>
+        </div>
+        <div id="retorno-cargas" class="grid gap-6 md:grid-cols-3"></div>
+    </section>
+
+    <!-- Radar List Header -->
+    <div class="flex items-center justify-between mb-8 px-2">
+        <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary fill-icon">explore_nearby</span>
+            <h3 class="text-2xl font-headline font-extrabold tracking-tight">Radar de Oportunidades</h3>
+        </div>
+        <span class="bg-surface-container-high px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest text-on-surface-variant">2 Resultados</span>
+    </div>
+
+    <!-- Radar Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
+        <!-- Card 1 -->
+        <article class="bg-surface-container-low rounded-[2rem] p-1 border border-outline-variant/30 shadow-sm hover:shadow-md transition-shadow group">
+            <div class="bg-white rounded-[1.8rem] p-8 h-full flex flex-col">
+                <div class="flex justify-between items-start mb-6">
+                    <div class="w-14 h-14 bg-surface-container-highest flex items-center justify-center rounded-2xl text-primary"><span class="material-symbols-outlined text-3xl">local_shipping</span></div>
+                    <div class="bg-primary-container text-on-primary-container px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest">Disponible</div>
+                </div>
+                <div class="flex-grow">
+                    <h4 class="text-2xl font-headline font-bold mb-1 text-primary">Cooperativa de Chaitén</h4>
+                    <p class="text-sm font-bold text-on-surface-variant mb-6 uppercase tracking-tighter">500kg de lana patagónica</p>
+                    <div class="space-y-4 mb-10">
+                        <div class="flex items-center gap-4">
+                            <span class="material-symbols-outlined text-outline text-xl">location_on</span>
+                            <div><p class="text-[9px] uppercase font-black opacity-40">Destino</p><p class="text-sm font-bold">Puerto Montt</p></div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span class="material-symbols-outlined text-primary text-xl">near_me</span>
+                            <div><p class="text-[9px] uppercase font-black opacity-40">Proximidad</p><p class="text-sm font-bold">A 5km de tu descarga</p></div>
+                        </div>
+                    </div>
+                </div>
+                <button class="w-full bg-primary text-white py-4 rounded-2xl font-headline font-bold text-lg hover:shadow-lg active:scale-95 transition-all flex items-center justify-center gap-3">Solicitar Carga <span class="material-symbols-outlined text-sm">arrow_forward_ios</span></button>
+            </div>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="bg-surface-container-low rounded-[2rem] p-1 border border-outline-variant/30 shadow-sm hover:shadow-md transition-shadow group">
+            <div class="bg-white rounded-[1.8rem] p-8 h-full flex flex-col">
+                <div class="flex justify-between items-start mb-6">
+                    <div class="w-14 h-14 bg-surface-container-highest flex items-center justify-center rounded-2xl text-primary"><span class="material-symbols-outlined text-3xl">inventory_2</span></div>
+                    <div class="bg-secondary-container text-on-secondary-container px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest">Alta Demanda</div>
+                </div>
+                <div class="flex-grow">
+                    <h4 class="text-2xl font-headline font-bold mb-1 text-primary">Miel de Hornopirén</h4>
+                    <p class="text-sm font-bold text-on-surface-variant mb-6 uppercase tracking-tighter">200kg en bins sellados</p>
+                    <div class="space-y-4 mb-10">
+                        <div class="flex items-center gap-4">
+                            <span class="material-symbols-outlined text-outline text-xl">location_on</span>
+                            <div><p class="text-[9px] uppercase font-black opacity-40">Destino</p><p class="text-sm font-bold">Puerto Montt</p></div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span class="material-symbols-outlined text-primary text-xl">route</span>
+                            <div><p class="text-[9px] uppercase font-black opacity-40">Desvío</p><p class="text-sm font-bold">A 12km de tu ruta</p></div>
+                        </div>
+                    </div>
+                </div>
+                <button class="w-full bg-primary text-white py-4 rounded-2xl font-headline font-bold text-lg hover:shadow-lg active:scale-95 transition-all flex items-center justify-center gap-3">Solicitar Carga <span class="material-symbols-outlined text-sm">arrow_forward_ios</span></button>
+            </div>
+        </article>
+    </div>
+
+    <!-- Visualización Mapa Estratégico -->
+    <section class="mb-24 grid grid-cols-1 md:grid-cols-12 gap-10 items-center bg-surface-container-low p-8 rounded-[2.5rem] border border-outline-variant/20">
+        <div class="md:col-span-4">
+            <h3 class="text-3xl font-headline font-extrabold mb-4 leading-tight tracking-tighter">Tu retorno estratégico.</h3>
+            <p class="text-sm text-on-surface-variant mb-8 leading-relaxed font-medium">Calculamos el menor desvío posible desde tu punto de descarga en Chaitén para conectar con productores locales.</p>
+            <div class="flex items-center gap-3 text-primary font-black uppercase tracking-widest text-xs cursor-pointer group">
+                Explorar Mapa Completo <span class="material-symbols-outlined group-hover:translate-x-2 transition-transform">trending_flat</span>
+            </div>
+        </div>
+        <div class="md:col-span-8 h-80 rounded-3xl overflow-hidden relative shadow-inner border border-outline-variant/30">
+            <img class="w-full h-full object-cover opacity-80 mix-blend-multiply grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQLljs9pQvh4z0qTXq0RJ4VzIAkB_QLO3Tj6JZR4nN3QICpWpt3V6j2HRrjPXqIj6Acex_Jp3zNnFKbAjRInFwuBjL45lGM-fNxkhBW-1IuXijiaGeI3g2a6GmP9rIagE6Dhd8Pn2OB4Db7Z4QQkiN19mq02smlr0dmte6t1lvLpX86APqoRgSeroZds9p5j1qWBF-OmMcNJ-5028ajbvi54Add13MKmjASD6tqPFTDjn87uS5fFpwIMfAXbV5Fhlb2vJwi16cQ9M" alt="Mapa de Retorno">
+            <div class="absolute inset-0 bg-gradient-to-t from-surface-container-low to-transparent"></div>
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+                <div class="bg-primary text-white text-[9px] font-black px-3 py-1 rounded-full shadow-xl mb-2 uppercase tracking-widest">Tú estás aquí</div>
+                <div class="w-5 h-5 bg-primary border-4 border-white rounded-full shadow-2xl animate-ping"></div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Bottom Nav Mobile -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-[#f8faf5]/80 dark:bg-[#191c1a]/90 backdrop-blur-xl z-50 rounded-t-lg shadow-[0_-10px_30px_rgba(25,28,26,0.04)] border-t border-[#c1c8c3]/15 md:hidden animate-fade-up">
+    <a href="home.html" class="flex flex-col items-center justify-center text-[#424844] dark:text-[#c1c8c3] px-5 py-2 hover:text-[#163428] dark:hover:text-[#ffffff] transition-all duration-300 ease-in-out">
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+        <span class="font-label text-[10px] font-bold uppercase tracking-wider mt-1">Inicio</span>
+    </a>
+    <a href="carga.html" class="flex flex-col items-center justify-center text-[#424844] dark:text-[#c1c8c3] px-5 py-2 hover:text-[#163428] dark:hover:text-[#ffffff] transition-all duration-300 ease-in-out">
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+        <span class="font-label text-[10px] font-bold uppercase tracking-wider mt-1">Carga</span>
+    </a>
+    <a href="ruta.html" class="flex flex-col items-center justify-center text-[#424844] dark:text-[#c1c8c3] px-5 py-2 hover:text-[#163428] dark:hover:text-[#ffffff] transition-all duration-300 ease-in-out">
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">explore</span>
+        <span class="font-label text-[10px] font-bold uppercase tracking-wider mt-1">Ruta</span>
+    </a>
+    <a href="retorno.html" class="flex flex-col items-center justify-center bg-primary text-white rounded-xl px-5 py-2 transition-all duration-300 ease-in-out">
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">swap_horiz</span>
+        <span class="font-label text-[10px] font-bold uppercase tracking-wider mt-1">Retorno</span>
+    </a>
+    <a href="nav.html" class="flex flex-col items-center justify-center text-[#424844] dark:text-[#c1c8c3] px-5 py-2 hover:text-[#163428] dark:hover:text-[#ffffff] transition-all duration-300 ease-in-out">
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">navigation</span>
+        <span class="font-label text-[10px] font-bold uppercase tracking-wider mt-1">Navegación</span>
+    </a>
+</nav>
+<script>
+    const retornoCargas = [
+        {
+            origen: "Quellón",
+            producto: "Mariscos frescos",
+            descripcion: "Mejillones y erizos premium",
+            destino: "Puerto Montt",
+            gananciaNeta: 420000,
+            combustibleRecuperado: 22,
+            impactoSocial: "Cooperativa de Mujeres Tejedoras",
+            color: "from-cyan-500 to-blue-500"
+        },
+        {
+            origen: "Chaitén",
+            producto: "Lana patagónica",
+            descripcion: "Rollos de lana para talleres textiles",
+            destino: "Puerto Montt",
+            gananciaNeta: 340000,
+            combustibleRecuperado: 18,
+            impactoSocial: "Asociación Rural de Tejedoras",
+            color: "from-amber-500 to-orange-500"
+        },
+        {
+            origen: "Palena",
+            producto: "Madera aserrada",
+            descripcion: "Tablas para construcción liviana",
+            destino: "Puerto Montt",
+            gananciaNeta: 500000,
+            combustibleRecuperado: 26,
+            impactoSocial: "Cooperativa de Selva de Palena",
+            color: "from-emerald-500 to-teal-500"
+        }
+    ];
+
+    function formatPeso(value) {
+        return `${value.toLocaleString('es-CL')} kg`;
+    }
+
+    function formatMoneda(value) {
+        return value.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
+    }
+
+    function renderRetornoCargas() {
+        const contenedor = document.getElementById('retorno-cargas');
+        const contador = document.getElementById('cargas-count');
+        const badge = document.getElementById('ganancia-estimada-badge');
+        if (!contenedor) return;
+
+        contenedor.innerHTML = retornoCargas.map(carga => `
+            <article class="rounded-[2rem] border border-white/15 bg-white/10 backdrop-blur-xl shadow-[0_20px_60px_-40px_rgba(22,52,40,0.35)] overflow-hidden">
+                <div class="p-6 bg-gradient-to-br ${carga.color} text-white">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-[10px] uppercase tracking-[0.35em] opacity-70">Origen</p>
+                            <h3 class="text-2xl font-bold">${carga.origen}</h3>
+                        </div>
+                        <span class="rounded-full bg-white/15 px-3 py-2 text-[10px] uppercase tracking-[0.3em] font-bold">${carga.destino}</span>
+                    </div>
+                    <p class="mt-4 text-sm font-semibold">${carga.producto}</p>
+                    <p class="mt-2 text-[13px] opacity-90 leading-relaxed">${carga.descripcion}</p>
+                </div>
+                <div class="p-6 space-y-4">
+                    <div class="grid gap-3 sm:grid-cols-2">
+                        <div class="rounded-3xl bg-surface p-4 border border-outline-variant/20">
+                            <p class="text-[10px] uppercase tracking-[0.35em] text-on-surface-variant mb-2">Ganancia Neta</p>
+                            <p class="text-lg font-bold text-primary">${formatMoneda(carga.gananciaNeta)}</p>
+                        </div>
+                        <div class="rounded-3xl bg-surface p-4 border border-outline-variant/20">
+                            <p class="text-[10px] uppercase tracking-[0.35em] text-on-surface-variant mb-2">Combustible</p>
+                            <p class="text-lg font-bold text-primary">${carga.combustibleRecuperado}L</p>
+                        </div>
+                    </div>
+                    <div class="rounded-3xl bg-surface p-4 border border-outline-variant/20">
+                        <p class="text-[10px] uppercase tracking-[0.35em] text-on-surface-variant mb-2">Impacto Social</p>
+                        <p class="font-semibold text-sm text-primary">${carga.impactoSocial}</p>
+                    </div>
+                </div>
+            </article>
+        `).join('');
+
+        if (contador) {
+            contador.innerText = `${retornoCargas.length} oportunidades`;
+        }
+
+        if (badge) {
+            const totalGanancia = retornoCargas.reduce((sum, item) => sum + item.gananciaNeta, 0);
+            badge.innerHTML = `<span class="material-symbols-outlined">attach_money</span> Ganancia Neta Estimada ${formatMoneda(totalGanancia)}`;
+        }
+    }
+
+    function showGlobalNotification(message) {
+        const toast = document.getElementById('global-notification');
+        const text = document.getElementById('notification-text');
+        if (toast && text) {
+            text.innerText = message;
+            toast.classList.remove('-translate-y-20', 'opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                toast.classList.add('-translate-y-20', 'opacity-0', 'pointer-events-none');
+            }, 5000);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.body.classList.add('loaded');
+        document.querySelectorAll('a[href$=".html"]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = link.href;
+                document.body.classList.remove('loaded');
+                setTimeout(() => { window.location.href = target; }, 500);
+            });
+        });
+        setInterval(() => {
+            const weight = Math.floor(Math.random() * 400) + 100;
+            showGlobalNotification(`Oportunidad: ${weight}kg detectados para tu retorno.`);
+        }, 20000);
+
+        renderRetornoCargas();
+    });
+</script>
+
+</body>
+</html>
